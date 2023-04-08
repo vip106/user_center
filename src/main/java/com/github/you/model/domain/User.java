@@ -1,7 +1,9 @@
-package com.github.you.model;
+package com.github.you.model.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 /**
@@ -49,6 +51,10 @@ public class User implements Serializable {
      * 邮件
      */
     private String email;
+    /**
+     * 用户角色 0 普通用户  1  管理员
+     */
+    private Integer role;
 
     /**
      * 用户状态 
@@ -68,6 +74,7 @@ public class User implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     private static final long serialVersionUID = 1L;

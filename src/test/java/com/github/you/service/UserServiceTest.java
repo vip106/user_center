@@ -1,8 +1,6 @@
 package com.github.you.service;
-import java.util.Date;
 
-import com.github.you.mapper.UserMapper;
-import com.github.you.model.User;
+import com.github.you.model.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +29,27 @@ class UserServiceTest {
         assertTrue(result);
 
 
+    }
+
+    @Test
+    public void testUserRegister() {
+        String userName = "fasd";
+        String userAccount = "you123";
+        String password = "";
+        String checkPassword = "123456789";
+        long result = userService.userRegister(userAccount, password, checkPassword);
+        Assertions.assertEquals(-1,result);
+        userAccount = "yo u123";
+        password = "123456789";
+        long result1 = userService.userRegister(userAccount, password, checkPassword);
+        Assertions.assertEquals(-1,result1);
+        password = "12345678";
+        long result2 = userService.userRegister(userAccount, password, checkPassword);
+        Assertions.assertEquals(-1,result2);
+        userAccount = "yupi";
+        password = "123456789";
+        long result3 = userService.userRegister(userAccount, password, checkPassword);
+        Assertions.assertTrue(result3 > 0);
     }
 
 }

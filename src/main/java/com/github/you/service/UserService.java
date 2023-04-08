@@ -1,7 +1,9 @@
 package com.github.you.service;
 
-import com.github.you.model.User;
+import com.github.you.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author Administrator
@@ -10,4 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService extends IService<User> {
 
+    long userRegister(String userAccount,String password , String checkPassword);
+
+    User doLogin(String userAccount, String password, HttpServletRequest request);
 }
