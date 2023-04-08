@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: you-center
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/you_center
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
