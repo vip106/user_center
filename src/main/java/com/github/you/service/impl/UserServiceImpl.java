@@ -3,9 +3,9 @@ package com.github.you.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.you.contant.UserConstant;
+import com.github.you.mapper.UserMapper;
 import com.github.you.model.domain.User;
 import com.github.you.service.UserService;
-import com.github.you.mapper.UserMapper;
 import com.github.you.util.CheckString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +15,6 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-
-import static java.util.UUID.randomUUID;
 
 /**
 * @author Administrator
@@ -34,7 +32,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public long userRegister(String userAccount, String password, String checkPassword) {
-//        检验
         if (StringUtils.isAnyBlank(userAccount,password,checkPassword)) {
             return -1;
         }
@@ -58,10 +55,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         String encryPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + password).getBytes(StandardCharsets.UTF_8)); // 加密
         User user = new User();
-        user.setUsername("user" + randomUUID().toString());
-        user.setGender(0);
-        user.setPhone("123465917");
-        user.setUsername("");
         user.setUserAccount(userAccount);
         user.setUserPassword(encryPassword);
         boolean userId = this.save(user);
@@ -96,19 +89,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             log.info("message: userAccount is error or password is error!");
             return null;
         }
-        User safetyUser = new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUsername(user.getUsername());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setGender(user.getGender());
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(user.getCreateTime());
+        User safetyUser = getSafetyUser(user);
         request.getSession().setAttribute(UserConstant.LOGIN_STATUS,user);
         return safetyUser;
 
+    }
+     /**
+     * @description: 用户脱敏
+     * @author Sniper_lw
+     * @date: 2023/4/9 13:31
+     */
+    public User getSafetyUser(User originUser) {
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setGender(originUser.getGender());
+        safetyUser.setPhone(originUser.getPhone());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(originUser.getCreateTime());
+        return safetyUser;
     }
 }
 

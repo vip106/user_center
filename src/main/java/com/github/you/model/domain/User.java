@@ -51,10 +51,6 @@ public class User implements Serializable {
      * 邮件
      */
     private String email;
-    /**
-     * 用户角色 0 普通用户  1  管理员
-     */
-    private Integer role;
 
     /**
      * 用户状态 
@@ -76,6 +72,11 @@ public class User implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 权限
+     */
+    private Integer userRole;
 
     private static final long serialVersionUID = 1L;
 }

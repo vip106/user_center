@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Sniper_lw
@@ -65,7 +67,8 @@ public class UserController {
         if (StringUtils.isNotBlank(userName)) {
             query.like("username",userName);
         }
-        return userService.list(query);
+        List<User> userList = userService.list(query);
+        return userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
     }
     @DeleteMapping("/delete")
     public boolean deleteUser(@RequestBody long id,HttpServletRequest request) {
@@ -82,7 +85,7 @@ public class UserController {
     public boolean isAuthority(HttpServletRequest request) {
         Object userInfo = request.getSession().getAttribute(UserConstant.LOGIN_STATUS);
         User user = (User) userInfo;
-        if (userInfo == null || user.getRole() != UserConstant.ROLE_ADMIN) {
+        if (userInfo == null || user.getUserRole() != UserConstant.ROLE_ADMIN) {
             return false;
         }
         return true;
